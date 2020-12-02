@@ -8,6 +8,7 @@ git clone https://github.com/Dr-Electron/drng-exporter
 cd drng-exporter
 go build
 ```
+Or download the precompiled binary from [Releases](https://github.com/Dr-Electron/drng-exporter/releases).  
 You can run it with `./drng-exporter`. Get a list of possible arguments with `./drng-exporter -h`
 # Run as service
 Create the service file:
@@ -46,13 +47,13 @@ global:
 scrape_configs:
   - job_name: goshimmer_local
     static_configs:
-    - targets: [localhost:9311]
+    - targets: ['localhost:9311']
   - job_name: drng_metrics # Metric job name
     static_configs:
-    - targets: [member1-url:1236, member1-url:2112] # dRNG and drng-exporter metric ip:port 
+    - targets: ['member1-url:1236', 'member1-url:2112'] # dRNG and drng-exporter metric ip:port
       labels:
         instance: 'member1-name' # the name you want to show in the dashboard for this member
-    - targets: [member2-url:1236, member2-url:2112]
+    - targets: ['member2-url:1236', 'member2-url:2112']
       labels:
         instance: 'member2-name'
 ```
