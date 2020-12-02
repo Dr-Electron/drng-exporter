@@ -77,7 +77,7 @@ func recordMetrics() {
 				if err != nil {
 					log.Fatalln(err)
 				}
-				log.Printf("\tINFO\tDRNG\t\tFetched drng randomness [%s]", drngRandomness)
+				log.Printf("\tINFO\tDRNG\t\tFetched drng randomness [%s]", drngRandomness.Randomness)
 				log.Println("\tINFO\tDRNG\t\tNode is online")
 				drngStatus.WithLabelValues(countryCode, geohashValue).Set(1)
 			}
