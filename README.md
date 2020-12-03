@@ -28,7 +28,8 @@ ExecStart=/path-to-drng-exporter/drng-exporter
 [Install]
 WantedBy=multi-user.target
 ```
-Add arguments to `ExecStart` if you need a non default setup.  
+Change `path-to-drng-exporter` to the path pointing to your binary and
+add arguments to `ExecStart` if you need a non default setup (you probably want to set the -drngPort to the public-listen port of your drand instance).  
 Now tell systemd you added a new service, enable and start it.
 ```
 sudo systemctl daemon-reload
@@ -71,8 +72,5 @@ Add the following under `environment`:
 Restart Grafana.
 ### Add Dashboard
 You can use the Grafana dashboard under `grafana/dRNG-dashboard.json` in this repo.
-Download it with:
-```
-wget https://raw.githubusercontent.com/Dr-Electron/drng-exporter/master/grafana/dRNG-dashboard.json
-```
-Copy the file into `grafana/dashboards`
+Click the + icon in the side menu, and then click Import. There you can paste the content of [dRNG-dashboard.json](https://raw.githubusercontent.com/Dr-Electron/drng-exporter/master/grafana/dRNG-dashboard.json)
+into the `Import via panel json` textfield
