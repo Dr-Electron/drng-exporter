@@ -41,7 +41,7 @@ var (
 	drngPort     string
 )
 
-func recordMetrics() {
+func recordMetrics(period time.Duration) {
 
 	if urlPtr != defaultURL {
 		log.Printf("\tINFO\tARGS\t\tNon default url [%s] will be monitored", urlPtr)
@@ -82,7 +82,7 @@ func recordMetrics() {
 				drngStatus.WithLabelValues(countryCode, geohashValue).Set(1)
 			}
 
-			time.Sleep(3 * time.Second)
+			time.Sleep(period)
 		}
 	}()
 }
@@ -112,11 +112,20 @@ func getLocationFromIP(ip string) (countryCode, geohashValue string, err error) 
 }
 
 func main() {
+	periodPtr := ""
 	flag.StringVar(&urlPtr, "url", defaultURL, "the url to monitor")
 	flag.StringVar(&drngPort, "drngPort", "8081", "the drng public-listen port")
+	flag.StringVar(&periodPtr, "period", "3s", "the metrics fetching period")
 	prometheusPort := flag.String("port", "2112", "prometheus metrics port")
 	flag.Parse()
-	recordMetrics()
+
+	period, err := time.ParseDuration(periodPtr)
+	if err != nil {
+		log.Printf("\tWARN\tFLAGS\t%s is not a valid duration. Using default period of 3s", periodPtr)
+		period = 3 * time.Second
+	}
+
+	recordMetrics(period)
 
 	log.Printf("\tINFO\tPROMETHEUS\tExporting prometheus metrics on [localhost:%s]", *prometheusPort)
 	http.Handle("/metrics", promhttp.Handler())
