@@ -90,19 +90,19 @@ func recordMetrics(period time.Duration) {
 func getLocationFromIP(ip string) (countryCode, geohashValue string, err error) {
 	message, err := http.Get("http://ip-api.com/json/" + ip)
 	if err != nil {
-		log.Printf("\tERROR\tLOCATION\t%s", "err")
+		log.Printf("\tERROR\tLOCATION\t%s", err)
 		return "", "", err
 	}
 	body, err := ioutil.ReadAll(message.Body)
 	if err != nil {
-		log.Fatalln("err")
+		log.Fatalln(err)
 	}
 
 	location := ipLocation{}
 
 	err = json.Unmarshal(body, &location)
 	if err != nil {
-		log.Printf("\tERROR\tLOCATION\t%s", "err")
+		log.Printf("\tERROR\tLOCATION\t%s", err)
 		return "", "", err
 	}
 
