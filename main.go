@@ -52,12 +52,12 @@ func recordMetrics(period time.Duration) {
 	go func() {
 		for {
 			//Fetch url/ip location
-			if urlPtr != defaultURL {
-				countryCode, geohashValue, _ = getLocationFromIP(urlPtr)
-			} else {
-				countryCode, geohashValue, _ = getLocationFromIP("")
+			cC, ghV, err := getLocationFromIP(urlPtr)
+			if err == nil {
+				countryCode = cC
+				geohashValue = ghV
+				log.Printf("\tINFO\tLOCATION\tFetched country code [%s] and geohash [%s]", countryCode, geohashValue)
 			}
-			log.Printf("\tINFO\tLOCATION\tFetched country code [%s] and geohash [%s]", countryCode, geohashValue)
 
 			//Fetch drng status and randomness
 			message, err := http.Get("http://" + urlPtr + ":" + drngPort + "/public/latest")
@@ -88,6 +88,9 @@ func recordMetrics(period time.Duration) {
 }
 
 func getLocationFromIP(ip string) (countryCode, geohashValue string, err error) {
+	if urlPtr == defaultURL {
+		ip = ""
+	}
 	message, err := http.Get("http://ip-api.com/json/" + ip)
 	if err != nil {
 		log.Printf("\tERROR\tLOCATION\t%s", err)
