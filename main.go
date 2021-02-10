@@ -3,9 +3,11 @@ package main
 import (
 	"encoding/json"
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/mmcloughlin/geohash"
@@ -24,7 +26,10 @@ type ipLocation struct {
 	Longitude   float64 `json:"lon"`
 }
 
-const defaultURL = "localhost"
+const (
+	defaultURL = "localhost"
+	appVersion = "1.1.0"
+)
 
 var (
 	drngStatus = promauto.NewGaugeVec(
@@ -120,7 +125,13 @@ func main() {
 	flag.StringVar(&drngPort, "drngPort", "8081", "the drng public-listen port")
 	flag.StringVar(&periodPtr, "period", "3s", "the metrics fetching period")
 	prometheusPort := flag.String("port", "2112", "prometheus metrics port")
+	version := flag.Bool("v", false, "prints current app version")
 	flag.Parse()
+
+	if *version {
+		fmt.Println(appVersion)
+		os.Exit(0)
+	}
 
 	period, err := time.ParseDuration(periodPtr)
 	if err != nil {
